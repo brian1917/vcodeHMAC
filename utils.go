@@ -10,7 +10,7 @@ import (
 )
 
 func getCurrentTimestamp() int64 {
-	return time.Now().UnixNano()/1000000
+	return time.Now().UnixNano() / 1000000
 }
 
 func generateNonce() string {
@@ -37,11 +37,10 @@ func getPathParams(urlString string) string {
 	path := u.Path
 	params := u.RawQuery
 
-	if len(params) >0 {
+	if len(params) > 0 {
 		return fmt.Sprintf("%v?%v", path, params)
-	} else {
-		return fmt.Sprintf("%v", path)
 	}
+	return fmt.Sprintf("%v", path)
 }
 
 func getScheme(urlString string) string {
