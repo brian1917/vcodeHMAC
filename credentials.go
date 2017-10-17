@@ -18,10 +18,13 @@ func getCredentials(fileString string) [2]string {
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
+		//We remove spaces to account for discrepancies in user configuration of creds file
 		if strings.Contains(scanner.Text(), "veracode_api_key_id") {
-			credentials[0] = strings.Replace(scanner.Text(),"veracode_api_key_id = ","", -1)
-		} else if strings.Contains(scanner.Text(), "veracode_api_key_secret"){
-			credentials[1] = strings.Replace(scanner.Text(),"veracode_api_key_secret = ","", -1)
+			removeSpaces := strings.Replace(scanner.Text(), " ", "", -1)
+			credentials[0] = strings.Replace(removeSpaces, "veracode_api_key_id=", "", -1)
+		} else if strings.Contains(scanner.Text(), "veracode_api_key_secret") {
+			removeSpaces := strings.Replace(scanner.Text(), " ", "", -1)
+			credentials[1] = strings.Replace(removeSpaces, "veracode_api_key_secret=", "", -1)
 		}
 	}
 
