@@ -1,4 +1,4 @@
-# Veracode API Package
+# Veracode HMAC Authorization Package
 [![GoDoc](https://godoc.org/github.com/brian1917/vcodeHMAC?status.svg)](https://godoc.org/github.com/brian1917/vcodeHMAC)
 
 ## Package Documentation
