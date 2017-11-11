@@ -2,17 +2,16 @@ package vcodeHMAC
 
 import (
 	"bufio"
-	"log"
 	"os"
 	"strings"
 )
 
-func getCredentials(fileString string) [2]string {
+func getCredentials(fileString string) ([2]string, error) {
 	var credentials [2]string
 
 	file, err := os.Open(fileString)
 	if err != nil {
-		log.Fatal(err)
+		return credentials, err
 	}
 	defer file.Close()
 
@@ -29,8 +28,8 @@ func getCredentials(fileString string) [2]string {
 	}
 
 	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
+		return credentials, err
 	}
 
-	return credentials
+	return credentials, nil
 }

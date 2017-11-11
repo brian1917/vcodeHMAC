@@ -4,7 +4,6 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
-	"log"
 	"net/url"
 	"time"
 )
@@ -19,34 +18,31 @@ func generateNonce() string {
 	return hex.EncodeToString(token)
 }
 
-func getHost(urlString string) string {
+func getHost(urlString string) (string, error) {
 	u, err := url.Parse(urlString)
 	if err != nil {
-		log.Fatal(err)
+		return "", err
 	}
-	host := u.Host
 
-	return host
+	return u.Host, nil
 }
 
-func getPathParams(urlString string) string {
+func getPathParams(urlString string) (string, error) {
 	u, err := url.Parse(urlString)
 	if err != nil {
-		log.Fatal(err)
+		return "", err
 	}
-	path := u.Path
-	params := u.RawQuery
 
-	if len(params) > 0 {
-		return fmt.Sprintf("%v?%v", path, params)
+	if len(u.RawQuery) > 0 {
+		return fmt.Sprintf("%s?%s", u.Path, u.RawQuery), nil
 	}
-	return fmt.Sprintf("%v", path)
+	return string(u.Path), nil
 }
 
-func getScheme(urlString string) string {
+func getScheme(urlString string) (string, error) {
 	u, err := url.Parse(urlString)
 	if err != nil {
-		log.Fatal(err)
+		return "", err
 	}
-	return u.Scheme
+	return u.Scheme, nil
 }

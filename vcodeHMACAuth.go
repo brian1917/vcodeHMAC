@@ -4,33 +4,35 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
-	"log"
+	"errors"
 	"strconv"
 )
 
 const defaultAuthScheme = "VERACODE-HMAC-SHA-256"
 
-func generateHeader(host, path, method, apiKeyID, apiKeySecret, authScheme string) string {
+func generateHeader(host, path, method, apiKeyID, apiKeySecret, authScheme string) (string, error) {
 	signingData := formatSigningData(apiKeyID, host, path, method)
 	timestamp := getCurrentTimestamp()
 	nonce := generateNonce()
 	authScheme = defaultAuthScheme
-	signature := createSignature(authScheme, apiKeySecret, signingData, timestamp, nonce)
-	return formatHeader(authScheme, apiKeyID, timestamp, nonce, signature)
+	signature, err := createSignature(authScheme, apiKeySecret, signingData, timestamp, nonce)
+	if err != nil {
+		return "", err
+	}
+	return formatHeader(authScheme, apiKeyID, timestamp, nonce, signature), nil
 }
 
-func createSignature(authScheme string, apiKeySecret string, signingData string, timestamp int64, nonce string) string {
+func createSignature(authScheme string, apiKeySecret string, signingData string, timestamp int64, nonce string) (string, error) {
 	if authScheme == defaultAuthScheme {
 		signature := hmacSig(apiKeySecret, signingData, timestamp, nonce)
-		return signature
+		return signature, nil
 	}
-	log.Fatal("Unsupported auth scheme")
-	return "error"
+	return "", errors.New("unsupported auth scheme")
 }
 
 func hmacSig(apiKeySecret string, signingData string, timestamp int64, nonce string) string {
 
-	timeString := strconv.Itoa(int(timestamp))
+	timeString := strconv.FormatInt(timestamp, 10)
 	apiKeySecDecoded, _ := hex.DecodeString(apiKeySecret)
 	nonceDecoded, _ := hex.DecodeString(nonce)
 

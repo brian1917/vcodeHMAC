@@ -2,14 +2,24 @@
 package vcodeHMAC
 
 // GenerateAuthHeader takes the location of your credentials file, the HTTP Method, and URL and returns the header value to be used for Authorization
-func GenerateAuthHeader(credsFile, httpMethod, url string) string {
-	credentials := getCredentials(credsFile)
-	apiKeyID := credentials[0]
-	apiKeySecret := credentials[1]
+func GenerateAuthHeader(credsFile, httpMethod, url string) (string, error) {
+	credentials, err := getCredentials(credsFile)
+	if err != nil {
+		return "", err
+	}
 
-	host := getHost(url)
-	path := getPathParams(url)
+	host, err := getHost(url)
+	if err != nil {
+		return "", err
+	}
+	params, err := getPathParams(url)
+	if err != nil {
+		return "", err
+	}
 
-	headerValue := generateHeader(host, path, httpMethod, apiKeyID, apiKeySecret, defaultAuthScheme)
-	return headerValue
+	headerValue, err := generateHeader(host, params, httpMethod, credentials[0], credentials[1], defaultAuthScheme)
+	if err != nil {
+		return "", err
+	}
+	return headerValue, nil
 }
