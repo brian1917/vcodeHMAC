@@ -10,7 +10,12 @@ import (
 
 const defaultAuthScheme = "VERACODE-HMAC-SHA-256"
 
-func generateHeader(host, path, method, apiKeyID, apiKeySecret, authScheme string) (string, error) {
+// Generates the Authorization header to pass into the API call
+// host is usually api.veracode.com, path is in the form /path/to/function
+// method is GET, PUT, POST, or DELETE
+// the API key and secret must be set
+// authScheme is VERACODE-HMAC-SHA-256
+func GenerateHeader(host, path, method, apiKeyID, apiKeySecret, authScheme string) (string, error) {
 	signingData := formatSigningData(apiKeyID, host, path, method)
 	timestamp := getCurrentTimestamp()
 	nonce := generateNonce()
