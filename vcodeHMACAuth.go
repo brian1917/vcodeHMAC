@@ -10,7 +10,7 @@ import (
 
 const defaultAuthScheme = "VERACODE-HMAC-SHA-256"
 
-func generateHeader(host, path, method, apiKeyID, apiKeySecret, authScheme string) (string, error) {
+func GenerateHeader(host, path, method, apiKeyID, apiKeySecret, authScheme string) (string, error) {
 	signingData := formatSigningData(apiKeyID, host, path, method)
 	timestamp := getCurrentTimestamp()
 	nonce := generateNonce()

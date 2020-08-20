@@ -17,7 +17,7 @@ func GenerateAuthHeader(credsFile, httpMethod, url string) (string, error) {
 		return "", err
 	}
 
-	headerValue, err := generateHeader(host, params, httpMethod, credentials[0], credentials[1], defaultAuthScheme)
+	headerValue, err := GenerateHeader(host, params, httpMethod, credentials[0], credentials[1], defaultAuthScheme)
 	if err != nil {
 		return "", err
 	}
